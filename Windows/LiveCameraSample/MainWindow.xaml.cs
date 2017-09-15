@@ -59,6 +59,8 @@ namespace LiveCameraSample
     {
         private EmotionServiceClient _emotionClient = null;
         private FaceServiceClient _faceClient = null;
+        private Person[] _persons = null;
+
         private VisionServiceClient _visionClient = null;
         private readonly FrameGrabber<LiveCameraResult> _grabber = null;
         private static readonly ImageEncodingParam[] s_jpegParams = {
@@ -181,10 +183,23 @@ namespace LiveCameraSample
             var attrs = new List<FaceAttributeType> { FaceAttributeType.Age,
                 FaceAttributeType.Gender, FaceAttributeType.HeadPose };
             var faces = await _faceClient.DetectAsync(jpg, returnFaceAttributes: attrs);
+            var faceNames = new Dictionary<Guid, string>();
+            foreach (var face in faces)
+            {
+                foreach (var person in _persons)
+                {
+                    VerifyResult result = await _faceClient.VerifyAsync(face.FaceId, Properties.Settings.Default.FaceAPIGroup, person.PersonId);
+                    if (result.IsIdentical)
+                    {
+                        faceNames.Add(face.FaceId, person.Name);
+                    }
+                }
+            }
+
             // Count the API call. 
             Properties.Settings.Default.FaceAPICallCount++;
             // Output. 
-            return new LiveCameraResult { Faces = faces };
+            return new LiveCameraResult { Faces = faces, FaceNames = faceNames };
         }
 
         /// <summary> Function which submits a frame to the Emotion API. </summary>
@@ -296,7 +311,7 @@ namespace LiveCameraSample
                     MatchAndReplaceFaceRectangles(result.Faces, clientFaces);
                 }
 
-                visImage = Visualization.DrawFaces(visImage, result.Faces, result.EmotionScores, result.CelebrityNames);
+                visImage = Visualization.DrawFaces(visImage, result.FaceNames, result.Faces, result.EmotionScores, result.CelebrityNames);
                 visImage = Visualization.DrawTags(visImage, result.Tags);
             }
 
@@ -383,6 +398,8 @@ namespace LiveCameraSample
             _faceClient = new FaceServiceClient(Properties.Settings.Default.FaceAPIKey, Properties.Settings.Default.FaceAPIHost);
             _emotionClient = new EmotionServiceClient(Properties.Settings.Default.EmotionAPIKey, Properties.Settings.Default.EmotionAPIHost);
             _visionClient = new VisionServiceClient(Properties.Settings.Default.VisionAPIKey, Properties.Settings.Default.VisionAPIHost);
+
+            _persons = await _faceClient.ListPersonsAsync(Properties.Settings.Default.FaceAPIGroup);
 
             // How often to analyze. 
             _grabber.TriggerAnalysisOnInterval(Properties.Settings.Default.AnalysisInterval);

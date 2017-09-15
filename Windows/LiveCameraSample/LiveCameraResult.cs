@@ -31,11 +31,16 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 // 
 
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
 namespace LiveCameraSample
 {
     // Class to hold all possible result types. 
     public class LiveCameraResult
     {
+        public Dictionary<Guid, string> FaceNames { get; set; } = null;
         public Microsoft.ProjectOxford.Face.Contract.Face[] Faces { get; set; } = null;
         public Microsoft.ProjectOxford.Common.Contract.EmotionScores[] EmotionScores { get; set; } = null;
         public string[] CelebrityNames { get; set; } = null;

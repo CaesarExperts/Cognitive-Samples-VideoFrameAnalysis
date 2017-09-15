@@ -102,7 +102,7 @@ namespace LiveCameraSample
             return DrawOverlay(baseImage, drawAction);
         }
 
-        public static BitmapSource DrawFaces(BitmapSource baseImage, Microsoft.ProjectOxford.Face.Contract.Face[] faces, EmotionScores[] emotionScores, string[] celebName)
+        public static BitmapSource DrawFaces(BitmapSource baseImage, Dictionary<Guid, string> faceNames, Microsoft.ProjectOxford.Face.Contract.Face[] faces, EmotionScores[] emotionScores, string[] celebName)
         {
             if (faces == null)
             {
@@ -120,6 +120,12 @@ namespace LiveCameraSample
                         face.FaceRectangle.Left, face.FaceRectangle.Top,
                         face.FaceRectangle.Width, face.FaceRectangle.Height);
                     string text = "";
+
+                    if (faceNames != null && faceNames.ContainsKey(face.FaceId))
+                    {
+
+                        text += faceNames[face.FaceId] + ", ";
+                    }
 
                     if (face.FaceAttributes != null)
                     {
