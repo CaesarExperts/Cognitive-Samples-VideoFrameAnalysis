@@ -73,7 +73,7 @@ namespace LiveCameraSample.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("00:00:10")]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:00:03")]
         public global::System.TimeSpan AnalysisInterval {
             get {
                 return ((global::System.TimeSpan)(this["AnalysisInterval"]));
