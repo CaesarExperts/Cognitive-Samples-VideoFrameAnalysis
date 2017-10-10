@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LiveCameraSample"
         mc:Ignorable="d"
-        Title="LiveCameraSample" Height="550" Width="725">
+        Title="LiveCameraSample" Height="585" Width="725">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="35" />
@@ -35,6 +35,7 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />

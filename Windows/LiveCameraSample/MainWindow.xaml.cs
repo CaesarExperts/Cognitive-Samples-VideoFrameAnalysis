@@ -77,8 +77,7 @@ namespace LiveCameraSample
             Faces,
             Emotions,
             EmotionsWithClientFaceDetect,
-            Tags,
-            Celebrities
+            Tags
         }
 
         public MainWindow()
@@ -268,30 +267,6 @@ namespace LiveCameraSample
             return new LiveCameraResult { Tags = analysis.Tags };
         }
 
-        /// <summary> Function which submits a frame to the Computer Vision API for celebrity
-        ///     detection. </summary>
-        /// <param name="frame"> The video frame to submit. </param>
-        /// <returns> A <see cref="Task{LiveCameraResult}"/> representing the asynchronous API call,
-        ///     and containing the celebrities returned by the API. </returns>
-        private async Task<LiveCameraResult> CelebrityAnalysisFunction(VideoFrame frame)
-        {
-            // Encode image. 
-            var jpg = frame.Image.ToMemoryStream(".jpg", s_jpegParams);
-            // Submit image to API. 
-            var result = await _visionClient.AnalyzeImageInDomainAsync(jpg, "celebrities");
-            // Count the API call. 
-            Properties.Settings.Default.VisionAPICallCount++;
-            // Output. 
-            var celebs = JsonConvert.DeserializeObject<CelebritiesResult>(result.Result.ToString()).Celebrities;
-            return new LiveCameraResult
-            {
-                // Extract face rectangles from results. 
-                Faces = celebs.Select(c => CreateFace(c.FaceRectangle)).ToArray(),
-                // Extract celebrity names from results. 
-                CelebrityNames = celebs.Select(c => c.Name).ToArray()
-            };
-        }
-
         private BitmapSource VisualizeResult(VideoFrame frame)
         {
             // Draw any results on top of the image. 
@@ -311,7 +286,7 @@ namespace LiveCameraSample
                     MatchAndReplaceFaceRectangles(result.Faces, clientFaces);
                 }
 
-                visImage = Visualization.DrawFaces(visImage, result.FaceNames, result.Faces, result.EmotionScores, result.CelebrityNames);
+                visImage = Visualization.DrawFaces(visImage, result.FaceNames, result.Faces, result.EmotionScores);
                 visImage = Visualization.DrawTags(visImage, result.Tags);
             }
 
@@ -371,9 +346,6 @@ namespace LiveCameraSample
                     break;
                 case AppMode.Tags:
                     _grabber.AnalysisFunction = TaggingAnalysisFunction;
-                    break;
-                case AppMode.Celebrities:
-                    _grabber.AnalysisFunction = CelebrityAnalysisFunction;
                     break;
                 default:
                     _grabber.AnalysisFunction = null;

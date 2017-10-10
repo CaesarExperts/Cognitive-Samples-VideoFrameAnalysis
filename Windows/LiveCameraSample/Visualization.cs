@@ -102,7 +102,7 @@ namespace LiveCameraSample
             return DrawOverlay(baseImage, drawAction);
         }
 
-        public static BitmapSource DrawFaces(BitmapSource baseImage, Dictionary<Guid, string> faceNames, Microsoft.ProjectOxford.Face.Contract.Face[] faces, EmotionScores[] emotionScores, string[] celebName)
+        public static BitmapSource DrawFaces(BitmapSource baseImage, Dictionary<Guid, string> faceNames, Microsoft.ProjectOxford.Face.Contract.Face[] faces, EmotionScores[] emotionScores)
         {
             if (faces == null)
             {
@@ -135,11 +135,6 @@ namespace LiveCameraSample
                     if (emotionScores?[i] != null)
                     {
                         text += Aggregation.SummarizeEmotion(emotionScores[i]);
-                    }
-
-                    if (celebName?[i] != null)
-                    {
-                        text += celebName[i];
                     }
 
                     faceRect.Inflate(6 * annotationScale, 6 * annotationScale);
