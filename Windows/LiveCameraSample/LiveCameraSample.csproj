@@ -106,7 +106,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Aggregation.cs" />
-    <Compile Include="CelebritiesResult.cs" />
     <Compile Include="LiveCameraResult.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="Visualization.cs" />
